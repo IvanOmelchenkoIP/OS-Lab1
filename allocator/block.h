@@ -8,3 +8,7 @@ struct block {
     bool is_first;
     bool is_last;
 };
+
+void block_split(struct block *, size_t);
+
+void block_merge(struct block *, struct block *);
