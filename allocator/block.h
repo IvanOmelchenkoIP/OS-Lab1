@@ -15,15 +15,16 @@ void block_split(struct block *, size_t);
 
 void block_merge(struct block *, struct block *);
 
+#define HEADER_SIZE ALLIGN(sizeof(struct block)
 
 inline void * block_to_payload(struct block * mem_block)
 {
-    return (char *)block + ALLIGN(sizeof(struct block))
+    return (char *)block + HEADER_SIZE))
 }
 
 inline void * payload_to_block(void * payload_ptr)
 {
-    return (block *)(payload_ptr - ALLIGN(sizeof(struct block)))
+    return (struct block *)(payload_ptr - HEADER_SIZE))
 }
 
 // cur block size get, set
@@ -86,3 +87,13 @@ inline void set_block_is_last(struct block * mem_block, bool state)
     mem_block->is_last = state;
 }
 
+
+inline struct block * next_block (struct block * mem_block)
+{
+    return (struct block *)((char *)mem_block + HEADER_SIZE + get_cur_block_size(mem_block));
+}
+
+inline struct block * prev_block (struct block * mem_block)
+{
+    return (struct block *)((char *)mem_block - HEADER_SIZE - get_cur_block_size(mem_block))
+}
