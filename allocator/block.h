@@ -15,85 +15,96 @@ void block_split(struct block *, size_t);
 
 void block_merge(struct block *, struct block *);
 
-#define HEADER_SIZE ALLIGN(sizeof(struct block)
+#define BLOCK_SIZE ALLIGN(sizeof(struct block)
 
-inline void * block_to_payload(struct block * mem_block)
+// init
+static inline void init_block(struct block * block)
 {
-    return (char *)block + HEADER_SIZE))
+    block->is_used = false;
+    block->is_first = false;
+    block->is_last = false;
 }
 
-inline void * payload_to_block(void * payload_ptr)
+// payload
+
+static inline void * block_to_payload(struct block * mem_block)
 {
-    return (struct block *)(payload_ptr - HEADER_SIZE))
+    return (char *)block + BLOCK_SIZE))
+}
+
+static inline void * payload_to_block(void * payload_ptr)
+{
+    return (struct block *)(payload_ptr - BLOCK_SIZE))
 }
 
 // cur block size get, set
 
-inline size_t get_cur_block_size(struct block * mem_block)
+static inline size_t get_cur_block_size(struct block * mem_block)
 {
     return mem_block->size_cur;
 }
 
-inline void set_cur_block_size(struct block * mem_block, size_t new_size)
+static inline void set_cur_block_size(struct block * mem_block, size_t new_size)
 {
     mem_block->size_cur = new_size;
 }
 
 // prev block size get, set
 
-inline size_t get_prev_block_size(struct block * mem_block)
+static inline size_t get_prev_block_size(struct block * mem_block)
 {
     return mem_block->size_prev;
 }
 
-inline void set_prev_block_size(struct block * mem_block, size_t new_size)
+static inline void set_prev_block_size(struct block * mem_block, size_t new_size)
 {
     mem_block->size_prev = new_size;
 }
 
 // flag used get, set
 
-inline bool get_block_is_used(struct block * mem_block)
+static inline bool get_block_is_used(struct block * mem_block)
 {
     return mem_block->is_used;
 }
 
-inline void set_block_is_used(struct block * mem_block, bool state)
+static inline void set_block_is_used(struct block * mem_block, bool state)
 {
     mem_block->is_used = state;
 }
 
 //flag is first get, set
 
-inline bool get_block_is_first(struct block * mem_block)
+static inline bool get_block_is_first(struct block * mem_block)
 {
     return mem_block->size_prev;
 }
 
-inline void set_block_is_first(struct block * mem_block, bool state)
+static inline void set_block_is_first(struct block * mem_block, bool state)
 {
     mem_block->is_first = state;
 }
 
 // flag is last get, set
 
-inline bool get_block_is_last(struct block * mem_block)
+static inline bool get_block_is_last(struct block * mem_block)
 {
     return mem_block->is_last;
 }
 
-inline void set_block_is_last(struct block * mem_block, bool state)
+static inline void set_block_is_last(struct block * mem_block, bool state)
 {
     mem_block->is_last = state;
 }
 
+// next and prev blocks
 
-inline struct block * next_block (struct block * mem_block)
+static inline struct block * next_block (struct block * mem_block)
 {
-    return (struct block *)((char *)mem_block + HEADER_SIZE + get_cur_block_size(mem_block));
+    return (struct block *)((char *)mem_block + BLOCK_SIZE + get_cur_block_size(mem_block));
 }
 
-inline struct block * prev_block (struct block * mem_block)
+static inline struct block * prev_block (struct block * mem_block)
 {
-    return (struct block *)((char *)mem_block - HEADER_SIZE - get_cur_block_size(mem_block))
+    return (struct block *)((char *)mem_block - BLOCK_SIZE - get_cur_block_size(mem_block))
 }

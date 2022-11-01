@@ -31,6 +31,20 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="allocator.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="allocator.h" />
+		<Unit filename="allocator_impl.h" />
+		<Unit filename="block.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="block.h" />
+		<Unit filename="config.h" />
+		<Unit filename="kernel.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="kernel.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
