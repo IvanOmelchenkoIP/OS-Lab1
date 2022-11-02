@@ -45,8 +45,9 @@ void * mem_alloc(size_t alloc_size)
 
 void mem_free(void * ptr)
 {
-    struct block * block = payload_to_block((char *)ptr);
-    set_block_is_used(block, false);
+    struct block * freed_block = payload_to_block((char *)ptr);
+    set_block_is_used(freed_block, false);
+    block_merge(freed_block, next_block(freed_block));
 }
 
 void mem_show()
