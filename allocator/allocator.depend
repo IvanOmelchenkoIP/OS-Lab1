@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1667404650 source:d:\github\os\os-lab1\allocator\kernel.c
+	<stdlib.h>
+	"kernel.h"
+
+1667404650 d:\github\os\os-lab1\allocator\kernel.h
+	<stdlib.h>
+
+1667404650 source:d:\github\os\os-lab1\allocator\main.c
+	<stdio.h>
+	<stdlib.h>
+

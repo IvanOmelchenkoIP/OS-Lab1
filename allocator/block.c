@@ -5,7 +5,7 @@
 void block_split(struct block* block_to_split, size_t size)
 {
     struct block* block2;
-    size_t current_size = get_cur_block_size();
+    size_t current_size = get_cur_block_size(size);
     if (current_size >= size + BLOCK_SIZE)
     {
         size_t split_size = current_size - (BLOCK_SIZE + size);
@@ -38,4 +38,5 @@ void block_merge(struct block* cur_block, struct block* merged_block)
     set_cur_block_size(cur_block, block_size);
     struct block* neighbour_block = next_block(block1);
     set_prev_block_size(neighbour_block, merged_size);
+    return;
 }

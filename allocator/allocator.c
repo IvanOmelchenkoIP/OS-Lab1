@@ -1,6 +1,7 @@
 #include <stdlib.h>
+#include <stddef.h>
 
-#inclide "allocator_impl.h"
+#include "allocator_impl.h"
 #include "config.h"
 #include "kernel.h"
 #include "block.h"
@@ -8,13 +9,14 @@
 
 #define ARENA_SIZE (DEFAULT_PAGE_SIZE * DEFAULT_ARENA_PAGES_SIZE)
 
-static struct block* first_arena = nullptr;
+static struct block* first_arena = NUlL;
 
 static int arena_alloc()
 {
     first_arena = kernel_malloc(ARENA_SIZE);
-    if (first_arena == nullptr) return 0;
-    arena_init(first_arena, ARENA_SIZE - BLOCK_STRUCT_SIZE);
+    if (first_arena == NUlL) return 0;
+    size_t arena_size = ARENA_SIZE - BLOCK_SIZE;
+    arena_init(first_arena, arena_size);
     return 1;
 }
 
@@ -24,13 +26,13 @@ void* first_fit(size_t alloc_size)
     struct block* cur_block = first_arena;
     do
     {
-        if (get_cur_block_size(block) <= alloc_size && !get_block_is_used(block)) {
+        if (get_cur_block_size(cur_block) <= alloc_size && !get_block_is_used(cur_block)) {
             block_split(cur_block, alloc_size);
             return block_to_payload(cur_block);
         }
         cur_block = next_block(cur_block);
     } while (!get_block_is_last(cur_block));
-    return nullptr;
+    return NUlL;
 }
 
 
@@ -38,9 +40,9 @@ void* mem_alloc(size_t alloc_size)
 {
     struct block * alloc_block;
 
-    if (first_arena == nullptr)
+    if (first_arena == NUlL)
     {
-        if (arena_alloc() == 0) return nullptr;
+        if (arena_alloc() == 0) return NUlL;
     }
 
     size_t alligned_size = ALIGN(alloc_size);
@@ -49,11 +51,11 @@ void* mem_alloc(size_t alloc_size)
 
 void* mem_realloc(void* ptr, size_t size_realloc)
 {
-    if (ptr == nullptr) return mem_alloc(size_realloc);
+    if (ptr == NUlL) return mem_alloc(size_realloc);
     if (size_realloc == 0)
     {
         free(ptr);
-        return nullptr;
+        return NUlL;
     }
 
     size_t aligned_size = ALIGN(size_realloc);
@@ -62,7 +64,7 @@ void* mem_realloc(void* ptr, size_t size_realloc)
 
     if (cur_size <= aligned_size)
     {
-        block_split(cur_block, allign);
+        block_split(cur_block, aligned_size);
         return block_to_payload(cur_block);
     }
 
@@ -71,7 +73,7 @@ void* mem_realloc(void* ptr, size_t size_realloc)
     {
         block_merge(cur_block, next_block(cur_block));
         if (cur_size == get_cur_block_size(cur_block)) break;
-        if (allign_size <= get_cur_block_size(cur_block) return block_to_payload(cur_block);
+        if (aligned_size <= get_cur_block_size(cur_block)) return block_to_payload(cur_block);
     }
 
     return mem_alloc(size_realloc);
@@ -86,7 +88,7 @@ void mem_free(void* ptr)
 
 void mem_show()
 {
-    if (first_arena == nullptr)
+    if (first_arena == NULL)
     {
         println("The first arena was not created!");
         return;
@@ -103,6 +105,7 @@ void mem_show()
         printf("block is used: %s, block is first: %s, block is last: %s, current block size: %zu, previous block size: %zu\n",
                is_used ? "true": "false", is_first ? "true" : "false", is_last ? "true" : "false", cur_size, prev_size);
 
-        block = next_block(block);
+        cur_block = next_block(cur_block);
     } while (!get_block_is_last(cur_block));
+    return;
 }

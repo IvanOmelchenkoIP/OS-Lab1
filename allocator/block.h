@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-#include "accocator_impl.h"
+#include "allocator_impl.h"
 
 struct block {
     size_t size_cur;
@@ -11,39 +13,18 @@ struct block {
     bool is_last;
 };
 
-void block_split(struct block*, size_t);
-
-void block_merge(struct block*, struct block*);
-
 #define BLOCK_SIZE ALLIGN(sizeof(struct block)
-
-// init
-static inline void init_block(struct block* block)
-{
-    block->is_used = false;
-    block->is_first = false;
-    block->is_last = false;
-}
-
-static inline void init_arena(struct block* block, size_t init_size)
-{
-    init_block(block);
-    set_cur_block_size(block, init_size);
-    set_prev_block_size(block, 0);
-    set_block_is_first(block, true);
-    set_block_is_last(block, true);
-}
 
 // payload
 
 static inline void* block_to_payload(struct block* mem_block)
 {
-    return (char*)block + BLOCK_SIZE))
+    return ((char*)mem_block + BLOCK_SIZE));
 }
 
 static inline void* payload_to_block(void* payload_ptr)
 {
-    return (struct block*)(payload_ptr - BLOCK_SIZE))
+    return (struct block*)(payload_ptr - BLOCK_SIZE));
 }
 
 // cur block size get, set
@@ -108,12 +89,33 @@ static inline void set_block_is_last(struct block* mem_block, bool state)
 
 // next and prev blocks
 
-static inline struct block* next_block (struct block* mem_block)
+static inline struct block* next_block (const struct block* mem_block)
 {
     return (struct block*)((char*)mem_block + BLOCK_SIZE + get_cur_block_size(mem_block));
 }
 
-static inline struct block* prev_block (struct block* mem_block)
+static inline struct block* prev_block (const struct block* mem_block)
 {
-    return (struct block*)((char*)mem_block - BLOCK_SIZE - get_cur_block_size(mem_block))
+    return (struct block*)((char*)mem_block - BLOCK_SIZE - get_cur_block_size(mem_block));
 }
+
+// init
+static inline void init_block(struct block* block)
+{
+    block->is_used = false;
+    block->is_first = false;
+    block->is_last = false;
+}
+
+static inline void init_arena(struct block* block, size_t init_size)
+{
+    init_block(block);
+    set_cur_block_size(block, init_size);
+    set_prev_block_size(block, 0);
+    set_block_is_first(block, true);
+    set_block_is_last(block, true);
+}
+
+void block_split(struct block*, size_t);
+
+void block_merge(struct block*, struct block*);
