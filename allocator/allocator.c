@@ -7,19 +7,24 @@
 
 #define ARENA_SIZE (DEFAULT_PAGE_SIZE * DEFAULT_ARENA_PAGES_SIZE)
 
-static struct block * arena = NULL;
+static struct block * first_arena = nullptr;
 
-sattic int arena_alloc()
+static int arena_alloc()
 {
-    arena = kernel_malloc(ARENA_SIZE);
-    if (arena == NULL) return -1;
-    arena_init(arena, ARENA_SIZE - BLOCK_STRUCT_SIZE);
-    return 0;
+    first_arena = kernel_malloc(ARENA_SIZE);
+    if (first_arena == nullptr) return 0;
+    arena_init(first_arena, ARENA_SIZE - BLOCK_STRUCT_SIZE);
+    return 1;
 }
 
 void * mem_alloc(size_t alloc_size)
 {
     struct block * alloc_block;
+
+    if (first_arena == nullptr)
+    {
+        if (arena_alloc() == 0) return nullptr;
+    }
 
 
 
