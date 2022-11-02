@@ -25,7 +25,7 @@ void * first_fit(size_t alloc_size)
     {
         if (get_cur_block_size(block) <= alloc_size && !get_block_is_used(block)) return cur_block;
         cur_block = next_block(cur_block);
-    } while(!get_block_is_last(cur_block));
+    } while (!get_block_is_last(cur_block));
     return nullptr;
 }
 
@@ -51,7 +51,25 @@ void mem_free(void * ptr)
 
 void mem_show()
 {
+    if (first_arena == nullptr)
+    {
+        println("The first arena was not created!");
+        return;
+    }
 
+    struct block * cur_block = first_arena;
+    do
+    {
+        bool is_used = get_block_is_used(cur_block);
+        bool is_first = get_block_is_first(cur_block);
+        bool is_last = get_block_is_last(cur_block);
+        size_t cur_size = get_cur_block_size(cur_block);
+        size_t prev_size = get_prev_block_size(cur_block);
+        printf("block is used: %s, block is first: %s, block is last: %s, current block size: %zu, previous block size: %zu\n",
+               is_used ? "true": "false", is_first ? "true" : "false", is_last ? "true" : "false", cur_size, prev_size);
+
+        block = next_block(block);
+    } while (!get_block_is_last(cur_block));
 }
 
 void mem_realloc()
