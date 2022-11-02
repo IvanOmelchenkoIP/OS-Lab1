@@ -77,7 +77,7 @@ void* mem_realloc(void* ptr, size_t size_realloc)
     return mem_alloc(size_realloc);
 }
 
-void mem_free(void * ptr)
+void mem_free(void* ptr)
 {
     struct block* freed_block = payload_to_block((char *)ptr);
     set_block_is_used(freed_block, false);
