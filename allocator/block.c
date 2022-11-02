@@ -29,10 +29,13 @@ void block_split(struct block * block_to_split, size_t size)
     set_block_is_used(block_to_split, true);
 }
 
-//----------------
-void block_merge(struct block * block1, struct block * block2)
+void block_merge(struct block * cur_block, struct block * merged_block)
 {
-    size_t block_size = get_cur_block_size(block1) + get_cur_block_size(block2);
-    set_cur_block_size(block1);
+    if (merged_block != next_block(cur_block)) return;
+    if (get_block_is_used(merged_block)) return;
 
+    size_t merged_size = get_cur_block_size(cur_block) + get_cur_block_size(merged_block);
+    set_cur_block_size(cur_block, block_size);
+    struct block * neighbour_block = next_block(block1);
+    set_prev_block_size(neighbour_block, merged_size);
 }
