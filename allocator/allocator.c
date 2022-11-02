@@ -17,6 +17,19 @@ static int arena_alloc()
     return 1;
 }
 
+
+void * first_fit(size_t alloc_size)
+{
+    struct block * cur_block = first_arena;
+    do
+    {
+        if (get_cur_block_size(block) <= alloc_size && !get_block_is_used(block)) return cur_block;
+        cur_block = next_block(cur_block);
+    } while(!get_block_is_last(cur_block));
+    return nullptr;
+}
+
+
 void * mem_alloc(size_t alloc_size)
 {
     struct block * alloc_block;
@@ -26,13 +39,22 @@ void * mem_alloc(size_t alloc_size)
         if (arena_alloc() == 0) return nullptr;
     }
 
-
-
-
+    alloc_block = first_fit(alloc_size);
+    return alloc_block;
 }
 
 void mem_free(void * ptr)
 {
     struct block * block = payload_to_block((char *)ptr);
     set_block_is_used(block, false);
+}
+
+void mem_show()
+{
+
+}
+
+void mem_realloc()
+{
+
 }
