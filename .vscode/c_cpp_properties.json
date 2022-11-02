@@ -3,7 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "D:\\GitHub\\OS\\OS-Lab1\\allocator\\**"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",
@@ -20,7 +20,7 @@
         {
             "name": "win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}\\**"
             ],
             "defines": [
                 "_DEBUG",
