@@ -25,6 +25,15 @@ static inline void init_block(struct block * block)
     block->is_last = false;
 }
 
+static inline void init_arena(struct block * block, size_t init_size)
+{
+    init_block(block);
+    set_cur_block_size(block, init_size);
+    set_prev_block_size(block, 0);
+    set_block_is_first(block, true);
+    set_block_is_last(block, true);
+}
+
 // payload
 
 static inline void * block_to_payload(struct block * mem_block)
