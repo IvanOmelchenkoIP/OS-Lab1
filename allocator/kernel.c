@@ -2,7 +2,7 @@
 
 #include "kernel.h"
 
-void * kernel_malloc(size_t size)
+void* kernel_malloc(size_t size)
 {
     return malloc(size);
 }
